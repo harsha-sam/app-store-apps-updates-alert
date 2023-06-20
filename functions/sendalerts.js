@@ -48,4 +48,4 @@ const handler = async () => {
   } catch (err) {
   }
 };
-cron.schedule('* * * *', handler);
+cron.schedule('0 * * * *', handler);
