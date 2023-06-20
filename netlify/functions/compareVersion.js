@@ -14,7 +14,11 @@ const handler = async () => {
       const {
         appName, appId, appVersion, email
       } = request;
-      const { version: currentVersion } = await getAppDetails(appId);
+      const response = await getAppDetails(appId);
+      if (!response) {
+        continue;
+      }
+      const { version: currentVersion } = response;
       if (parseFloat(currentVersion) > parseFloat(appVersion)) {
         console.log('in');
         let html = `<p>${appName} App (App Id: ${appId})from the Apple App Store has been updated.</p>`;
