@@ -1,8 +1,8 @@
 require('dotenv').config();
-const getAppDetails = require('../../lib/getAppDetails');
-const clientPromise = require('../../lib/db');
-const sendEmail = require('../../lib/sendEmail');
-const { schedule } = require('@netlify/functions');
+const getAppDetails = require('../lib/getAppDetails');
+const clientPromise = require('../lib/db');
+const sendEmail = require('../lib/sendEmail');
+const cron = require('node-cron');
 
 
 const handler = async () => {
@@ -20,7 +20,6 @@ const handler = async () => {
       }
       const { version: currentVersion } = response;
       if (parseFloat(currentVersion) > parseFloat(appVersion)) {
-        console.log('in');
         let html = `<p>${appName} App (App Id: ${appId})from the Apple App Store has been updated.</p>`;
         const emailOptions = {
           to: email,
@@ -46,11 +45,7 @@ const handler = async () => {
         );
       }
     }
-    process.exit();
   } catch (err) {
-    console.log(err);
-    process.exit();
   }
 };
-
-exports.handler = schedule('@hourly', handler);
+cron.schedule('* * * *', handler);
