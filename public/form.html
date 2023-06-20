@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="container">
+    <div style="width: 50%; margin: auto; margin-top: 10%">
+      <h1 class="mb-3">Apple Store App Updates Alerting System</h1>
+      <p class="mb-4">
+        Please provide your Email Address and the App Id from the Apple App
+        Store of the application you want to get notified about updates !
+      </p>
+      <form>
+        <div class="mb-4">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            required
+            placeholder="name@example.com"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="appId" class="form-label">App Id</label>
+          <input type="appId" class="form-control" id="appId" required />
+        </div>
+      </form>
+      <button class="btn btn-primary" onclick="insert()">
+        Subscribe for alerts
+      </button>
+      <button class="btn btn-danger" onclick="deleteAlert()">
+        Remove alerts
+      </button>
+    </div>
+    <script>
+      const form = document.getElementById('form');
+      function insert() {
+        const emailField = document.getElementById('email');
+        const appIdField = document.getElementById('appId');
+        fetch('/api/subscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: emailField.value,
+            appId: appIdField.value,
+          }),
+        })
+          .then(async (response) => {
+            const data = await response.json();
+            return { status: response.status, data };
+          })
+          .then((obj) => {
+            if (obj.status === 400) {
+              window.alert(obj.data.error);
+            } else if (obj.status === 200) {
+              window.alert('Success');
+            }
+          });
+        emailField.value = '';
+        appIdField.value = '';
+      }
+      function deleteAlert() {
+        const emailField = document.getElementById('email');
+        const appIdField = document.getElementById('appId');
+        fetch('/api/subscribe', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: emailField.value,
+            appId: appIdField.value,
+          }),
+        })
+          .then(async (response) => {
+            const data = await response.json();
+            return { status: response.status, data };
+          })
+          .then((obj) => {
+            if (obj.status === 400) {
+              window.alert(obj.data.error);
+            } else if (obj.status === 200) {
+              window.alert('Success');
+            }
+          });
+
+        emailField.value = '';
+        appIdField.value = '';
+      }
+    </script>
+  </body>
+</html>
